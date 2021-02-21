@@ -1,6 +1,5 @@
 import pygame
 
-
 class Board:
     def __init__(self, width):
         self.width = width
@@ -8,16 +7,18 @@ class Board:
         # colors:
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
-        self.blue = (0, 0, 255)
-        self.green = (0, 255, 0)
+        # images:
         self.img_size = (self.width//3-4, self.width//3-4)
         self.ximg = pygame.transform.scale(pygame.image.load('img/x-img.png'), self.img_size)
         self.oimg = pygame.transform.scale(pygame.image.load('img/o-img.png'), self.img_size)
         self.pre_ximg = pygame.transform.scale(pygame.image.load('img/pre-x-img.png'), self.img_size)
         self.pre_oimg = pygame.transform.scale(pygame.image.load('img/pre-x-img.png'), self.img_size)
+        self.winximg = pygame.transform.scale(pygame.image.load("img/winx.png"), (self.width, self.width//3))
+        self.winoimg = pygame.transform.scale(pygame.image.load("img/wino.png"), (self.width, self.width//3))
+        self.tieimg = pygame.transform.scale(pygame.image.load("img/tie.png"), (self.width, self.width//3))
 
         pygame.font.init()
-        self.myfont = pygame.font.SysFont('arial', 30)
+        self.myfont = pygame.font.SysFont('georgia', 80)
 
         self.screen = pygame.display.set_mode(self.screen_size)
         self.screen.fill(self.black)
@@ -35,16 +36,33 @@ class Board:
 
     def draw(self):
         self.draw_grid()
-        self.draw_circles()
-        pygame.display.flip()
+        self.draw_moves()
+        pygame.display.update()
 
-    def draw_circles(self):
+    def draw_moves(self):
         for i in range(0, 3):
             for j in range(0, 3):
                 if self.game[i][j] == 1:
                     self.screen.blit(self.ximg, (2 + self.width // 3 * j, 2 + self.width // 3 * i))
                 elif self.game[i][j] == 2:
                     self.screen.blit(self.oimg, (2 + self.width // 3 * j, 2 + self.width // 3 * i))
+
+    def draw_game_over(self, winner):
+        if winner == 1:
+            self.screen.blit(self.winximg, (0, self.width//3))
+        elif winner ==2:
+            self.screen.blit(self.winoimg, (0, self.width//3))
+        else:
+            self.screen.blit(self.tieimg, (0, self.width//3))
+        pygame.display.flip()
+        pygame.time.wait(1000)
+        self.play_again()
+
+    def play_again(self):
+        self.game = [[0, 0, 0],
+                     [0, 0, 0],
+                     [0, 0, 0]]
+        self.screen.fill(self.black)
 
     def save_the_move(self, x, y):
         if self.game[x][y] == 0:

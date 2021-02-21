@@ -1,6 +1,5 @@
-import board
 import pygame
-
+import board
 
 class Gaming:
     def __init__(self):
@@ -18,16 +17,18 @@ class Gaming:
     def check_win(self):
         winner_check = self.board.winner_check()
         if winner_check == 1:
+            self.board.draw_game_over(1)
             pygame.time.wait(1000)
-            raise SystemExit
-        if winner_check == 2:
+        elif winner_check == 2:
+            self.board.draw_game_over(2)
             pygame.time.wait(1000)
-            raise SystemExit
-        if winner_check == 'tie':
+        elif winner_check == 'tie':
+            self.board.draw_game_over(0)
             pygame.time.wait(1000)
-            raise SystemExit
+
 
     def run_game(self):
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
